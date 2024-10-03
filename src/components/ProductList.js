@@ -23,7 +23,7 @@ const ProductList = () => {
   },[])
   const handleEdit = (id) => {
     // Add logic to handle editing the product
-    router.push(`/products/${id}`);
+    router.push(`/products/edit/${id}`);
     
   };
 
