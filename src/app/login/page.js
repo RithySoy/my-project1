@@ -1,24 +1,53 @@
 'use client';
 
 import { useState } from "react";
-import { auth } from "../../lib/firebase";
+import { auth, db, getDoc } from "../../lib/firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { doc } from "firebase/firestore";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
-  const handleLogin = async (e) => {
+const handleLogin = async (e) => {
     e.preventDefault();
+    if (isLoading) return; // Prevent multiple submissions
+    setIsLoading(true);
+    setError(null);
     try {
-      await signInWithEmailAndPassword(auth, email, password);
-      router.push("/home"); // Redirect to dashboard after successful login
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+      const userRef = doc(db, "users", user.uid);
+      const userDoc = await getDoc(userRef);
+      
+      if (!userDoc.exists()) {
+        setError("User data not found");
+        return;
+      }
+      
+      const userData = userDoc.data();
+
+      if (userData.role === "admin") {
+        router.push("/admin-dashboard");
+      } else if (userData.role === "user") {
+        router.push("/home");
+      } else {
+        setError("Invalid user role");
+      }
     } catch (err) {
-      setError(err.message);
+      console.error("Login error:", err);
+      if (err.code === "auth/user-not-found" || err.code === "auth/wrong-password") {
+        setError("Invalid email or password");
+      } else {
+        setError(`An error occurred during login: ${err.message}`);
+      }
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -33,6 +62,7 @@ const Login = () => {
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
           <form onSubmit={handleLogin} className="space-y-6">
+            {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
             <div>
               <label
                 htmlFor="email"
@@ -86,9 +116,10 @@ const Login = () => {
             <div>
               <button
                 type="submit"
-                className="flex w-full justify-center rounded-md bg-black px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-gray-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
+                disabled={isLoading}
+                className="flex w-full justify-center rounded-md bg-black px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-gray-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black disabled:opacity-50"
               >
-                Login
+                {isLoading ? "Logging in..." : "Login"}
               </button>
             </div>
           </form>

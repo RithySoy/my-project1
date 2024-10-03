@@ -1,27 +1,35 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 "use client"
 import Link from "next/link";
 import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
-import {app} from "@/lib/firebase";
 import { useState } from "react";
+
+import { doc, setDoc } from "firebase/firestore";
+import { db } from "@/lib/firebase"; 
+
 export default function page() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const auth = getAuth(app);
+  const [error, setError] = useState("");
+  const auth = getAuth();
   
   const handleSignUp = async (e) => {
-    
+    e.preventDefault();
+    setError(""); // Clear any previous errors
     try {
-      const userCredential = await createUserWithEmailAndPassword(
-        auth, 
-        email,
-        password
-      );
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
+      
+      await setDoc(doc(db, "users", user.uid), {
+      email: user.email,
+      role: "user", // Default role
+      createdAt: new Date().toISOString(),
+    });
       console.log("User signed up:", user);
       // Add further logic here (e.g., redirect to another page)
     } catch (error) {
       console.error("Error signing up:", error.message);
-      // Handle error (e.g., show a notification)
+      setError(error.message);
     }
   };
   return (
@@ -34,7 +42,7 @@ export default function page() {
         </div>
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form action={handleSignUp} method="POST" className="space-y-6">
+          <form onSubmit={(e) => handleSignUp(e)} className="space-y-6">
             <div>
               <label
                 htmlFor="email"
@@ -49,7 +57,7 @@ export default function page() {
                   onChange={(e) => {setEmail(e.target.value)
                     console.log(email)
                   }}
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-black-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
               </div>
             </div>
@@ -109,3 +117,6 @@ export default function page() {
     </>
   );
 }
+
+
+
