@@ -37,7 +37,7 @@ export default function ProductUploader() {
   return (
     <div className="max-w-2xl mx-auto p-4">
       <form onSubmit={handleSubmit} className="space-y-4">
-        <h1 className="text-2xl font-bold mb-4">Add a Product</h1>
+        <h1 className="text-2xl font-bold mb-4">Create Product</h1>
         <input type="file" onChange={handleFileChange} />
         <input
           className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"

@@ -96,7 +96,7 @@ const ShoppingCart = () => {
 
       {/* Cart Total */}
       <div className="flex justify-between items-center mt-8">
-        <a href="/overview" className="text-blue-600 hover:text-blue-800 font-medium">
+        <a href="/products" className="text-blue-600 hover:text-blue-800 font-medium">
           Continue Shopping
         </a>
         <div className="text-right">
