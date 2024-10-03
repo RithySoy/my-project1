@@ -25,7 +25,7 @@ export default function page() {
       role: "user", // Default role
       createdAt: new Date().toISOString(),
     });
-      console.log("User signed up:", user);
+      alert(`Sign up successfully, welcome ${user.email}!`)
       // Add further logic here (e.g., redirect to another page)
     } catch (error) {
       console.error("Error signing up:", error.message);
@@ -117,6 +117,4 @@ export default function page() {
     </>
   );
 }
-
-
 
