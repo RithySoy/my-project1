@@ -6,6 +6,7 @@ import { Bars3Icon, BellIcon, XMarkIcon, ShoppingCartIcon } from '@heroicons/rea
 import { auth, db } from '@/lib/firebase' // Adjust this import path as needed
 import { onAuthStateChanged } from 'firebase/auth'
 import { doc, getDoc } from 'firebase/firestore'
+import { signOut } from "firebase/auth";
 import Link from 'next/link'
 
 const navigation = [
@@ -86,6 +87,40 @@ export default function Navbar() {
                         {item.name}
                       </Link>
                     ))}
+                    <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+  {!user && (
+    <>
+      <Link
+        href="/signup"
+        className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
+      >
+        Sign up
+      </Link>
+      <Link
+        href="/login"
+        className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
+      >
+        Login
+      </Link>
+    </>
+  )}
+  {user && (
+    <button
+      className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
+      onClick={() => {
+       signOut(auth).then(() => {
+          console.log("Signed out");
+          // Update the user state to null
+          // For example:
+          // setUser(null);
+        }).catch((error) => {
+          console.error("Error signing out:", error);
+        });
+      }}    >
+      Sign out
+    </button>
+  )}
+</div>
                   </div>
                 </div>
               </div>
