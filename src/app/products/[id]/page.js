@@ -119,10 +119,15 @@ export default function ProductDetail() {
                 <div className="mt-6 flex space-x-4">
                   <Button className="w-full" onClick={handleAddToCart}>
                     Add to Cart
-                  </Button>
-                  <Button className="w-full" variant="primary" onClick={handleBuyNow}>
-                    Buy Now
-                  </Button>
+                    </Button>
+
+                  <Button 
+                  className="w-full bg-gradient-to-r from-green-400 to-green-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:from-green-500 hover:to-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 transition-all duration-300 ease-in-out"
+                  onClick={handleBuyNow}
+                >
+                  Buy Now
+                </Button>
+
                 </div>
               </CardContent>
             </div>
