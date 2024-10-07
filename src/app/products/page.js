@@ -93,28 +93,6 @@ const ProductsPage = () => {
           <p className="text-center mt-4 text-gray-600">No products found.</p>
         )}
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {filteredProducts.map((product) => (
-          <div key={product.id} className="border p-4 rounded-md shadow-sm">
-            <h2 className="text-xl font-semibold">{product.name}</h2>
-             <img src={product.imageUrl} alt=""/>
-            <p className="text-gray-600">Category: {product.category}</p>
-            <p className="text-gray-600">Price: ${product.price}</p>
-            <p className="text-gray-600">Stock: {product.stock}</p>
-             <p className="text-gray-600">Date Created: {product.dateCreated}</p>
-
-            {/* <Link href={`/products/edit/${product.id}`} className='mr-10'>
-              <span className="text-blue-500 hover:underline">Edit</span>
-            </Link> */}
-            <Link href={`/products/${product.id}`}>
-              <span className="text-blue-500 hover:underline">View</span>
-            </Link>
-          </div>
-        ))}
-      </div>
-      {filteredProducts.length === 0 && (
-        <p className="text-center mt-4 text-gray-600">No products found.</p>
-      )}
     </div>
   );
 };
