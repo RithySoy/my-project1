@@ -1,6 +1,6 @@
 "use client"
 import { useState } from 'react';
-import { doc, updateDoc } from "firebase/firestore";
+import { doc, updateDoc, Timestamp } from "firebase/firestore";
 import { db } from '@/lib/firebase';  // Import your Firestore setup
 
 const UpdateProductForm = ({ productId }) => {
@@ -9,6 +9,7 @@ const UpdateProductForm = ({ productId }) => {
     category: "",
     price: 0,
     stock: 0,
+    dateCreated: Timestamp.now(), // Add the dateCreated field
   });
 
   // Handle input change
@@ -27,7 +28,10 @@ const UpdateProductForm = ({ productId }) => {
     const productRef = doc(db, "products", productId);  // Specify collection and productId
 
     try {
-      await updateDoc(productRef, productData);
+      await updateDoc(productRef, {
+        ...productData,
+        dateCreated: Timestamp.now(), // Update the dateCreated field
+      });
       console.log("Product updated successfully");
     } catch (error) {
       console.error("Error updating product:", error);
@@ -87,3 +91,4 @@ const UpdateProductForm = ({ productId }) => {
 };
 
 export default UpdateProductForm;
+
