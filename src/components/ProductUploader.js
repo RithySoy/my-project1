@@ -13,7 +13,11 @@ export default function ProductUploader() {
     price: 0,
     description: "",
     stock: 0,
-    dateCreated: new Date().toISOString(),
+    dateCreated: new Date().toLocaleDateString("en-GB", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    }),
   });
 
   const handleFileChange = (e) => {
