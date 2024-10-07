@@ -89,7 +89,7 @@ const HomePage = () => {
                     </a>
                   </h3>
                   <p className="mt-1 text-sm text-gray-500">{product.color}</p>
-                  <p className="text-lg font-medium text-orange-500 mt-2">{product.price}</p>
+                  <p className="text-lg font-medium text-orange-500 mt-2">${product.price}</p>
                 </div>
               </div>
             ))}
@@ -119,7 +119,7 @@ const HomePage = () => {
                       </a>
                     </h3>
                     <p className="mt-1 text-sm text-gray-500">{product.color}</p>
-                    <p className="text-lg font-medium text-orange-500 mt-2">{product.price}</p>
+                    <p className="text-lg font-medium text-orange-500 mt-2">${product.price}</p>
                   </div>
                 </div>
               ))}

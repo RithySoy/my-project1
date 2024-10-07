@@ -1,4 +1,5 @@
 'use client';
+
 import Navbar from '@/components/Navbar';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
@@ -31,31 +32,66 @@ const ProductsPage = () => {
   };
 
   const filteredProducts = products.filter((product) =>
-    // product.name.toLowerCase().startsWith(searchTerm.toLowerCase()) 
-  product.name.toLowerCase().includes(searchTerm.toLowerCase()) 
-  // ||
-    //product.category.toLowerCase().includes(searchTerm.toLowerCase())
+    product.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   if (loading) {
-    return <div className="flex h-screen justify-center items-center">
-    <Loader2 className="h-8 w-8 animate-spin text-primary" />
-  </div>;
+    return (
+      <div className="flex h-screen justify-center items-center">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
   }
 
   return (
-    <div>
-      <Navbar/>
+    <div className="min-h-screen bg-gray-100">
+      <Navbar />
       <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Products</h1>
-      <div className="mb-4">
-        <input
-          type="text"
-          placeholder="Search products..."
-          value={searchTerm}
-          onChange={handleSearch}
-          className="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-        />
+        <h1 className="text-4xl font-bold text-center text-gray-800 mb-4">Products</h1>
+
+        {/* Search Input */}
+        <div className="mb-6 flex justify-center">
+          <input
+            type="text"
+            placeholder="Search products..."
+            value={searchTerm}
+            onChange={handleSearch}
+            className="w-full max-w-lg p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+          />
+        </div>
+
+        {/* Product Grid Section */}
+        <div className="grid grid-cols-1 gap-y-12 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
+          {filteredProducts.map((product) => (
+            <div key={product.id} className="group relative bg-white shadow-lg rounded-lg overflow-hidden transform transition duration-500 hover:scale-105">
+              <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-t-lg bg-gray-200 lg:aspect-none lg:h-60">
+                <img
+                  src={product.imageUrl}
+                  alt={product.name}
+                  className="h-full w-full object-cover object-center lg:h-full lg:w-full"
+                />
+              </div>
+              <div className="px-4 py-4">
+                <h3 className="text-lg font-semibold text-gray-900">
+                  <Link href={`/products/${product.id}`}>
+                    <span aria-hidden="true" className="absolute inset-0" />
+                    {product.name}
+                  </Link>
+                </h3>
+                <p className="mt-1 text-sm text-gray-500">Category: {product.category}</p>
+                <p className="mt-1 text-sm text-gray-500">Stock: {product.stock}</p>
+                <p className="text-lg font-medium text-orange-500 mt-2">${product.price}</p>
+                <p className="text-lg font-medium text-orange-500 mt-2">Date created: {product.dateCreated}</p>
+
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* No Products Found */}
+        {filteredProducts.length === 0 && (
+          <p className="text-center mt-4 text-gray-600">No products found.</p>
+        )}
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {filteredProducts.map((product) => (
@@ -79,7 +115,6 @@ const ProductsPage = () => {
       {filteredProducts.length === 0 && (
         <p className="text-center mt-4 text-gray-600">No products found.</p>
       )}
-    </div>
     </div>
   );
 };
