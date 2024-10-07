@@ -56,7 +56,7 @@ const HomePage = () => {
                   </div>
                   <div className="px-4 py-4">
                     <h3 className="text-lg font-semibold text-gray-900">
-                      <a href="./overview">
+                      <a href="./products">
                         <span aria-hidden="true" className="absolute inset-0" />
                         {category}
                       </a>
@@ -83,7 +83,7 @@ const HomePage = () => {
                 </div>
                 <div className="px-4 py-4">
                   <h3 className="text-lg font-semibold text-gray-900">
-                    <a href="./overview">
+                    <a href="./products">
                       <span aria-hidden="true" className="absolute inset-0" />
                       {product.name}
                     </a>
@@ -113,7 +113,7 @@ const HomePage = () => {
                   </div>
                   <div className="px-4 py-4">
                     <h3 className="text-lg font-semibold text-gray-900">
-                      <a href="./overview">
+                      <a href="./products">
                         <span aria-hidden="true" className="absolute inset-0" />
                         {product.name}
                       </a>

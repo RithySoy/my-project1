@@ -1,50 +1,21 @@
-import React from 'react';
-import { ChevronDown, Check, Clock } from 'lucide-react';
+"use client";
 
-const cartItems = [
-  {
-    id: 1,
-    name: 'SONNY',
-    color: 'White',
-    price: 35.00,
-    quantity: 1,
-    image: '/images/camera.jpg',
-    inStock: true,
-  },
-  {
-    id: 2,
-    name: 'HEADPHONE',
-    color: 'Sienna',
-    size: 'Large',
-    price: 32.00,
-    quantity: 1,
-    image: '/images/headphones.jpg',
-    inStock: true,
-  },
-  {
-    id: 3,
-    name: 'SOFA',
-    color: 'Black',
-    size: 'Large',
-    price: 32.00,
-    quantity: 1,
-    image: '/images/furnitur.jpg',
-    inStock: false,
-    shippingDelay: '3-4 weeks',
-  },
-];
+import React, { useState, useEffect } from 'react';
+import { Check, Clock } from 'lucide-react';
+import Link from 'next/link';
 
-const CartItem = ({ item }) => (
+const CartItem = ({ item, removeItem }) => (
   <div className="flex items-center py-6 border-b last:border-b-0">
+    
     {/* Product Image */}
-    <img src={item.image} alt={item.name} className="w-24 h-24 object-cover rounded-lg mr-6" />
+    <img src={item.imageUrl} alt={item.name} className="w-24 h-24 object-cover rounded-lg mr-6" />
     
     {/* Product Details */}
     <div className="flex-grow">
       <h3 className="text-lg font-semibold text-gray-900">{item.name}</h3>
-      <p className="text-gray-500">{item.color} {item.size && `- ${item.size}`}</p>
+      <p className="text-gray-500">{item.color}</p>
 
-      {item.inStock ? (
+      {item.stock > 0 ? (
         <p className="text-green-500 flex items-center mt-2">
           <Check size={18} className="mr-1" /> In stock
         </p>
@@ -71,11 +42,37 @@ const CartItem = ({ item }) => (
     </div>
 
     {/* Remove Button */}
-    <button className="ml-6 text-red-600 hover:text-red-800 hover:underline">Remove</button>
+    <button
+      className="ml-6 text-red-600 hover:text-red-800 hover:underline"
+      onClick={() => removeItem(item.id)} // Make sure item.id is unique for each product
+    >
+      Remove
+    </button>
   </div>
 );
 
 const ShoppingCart = () => {
+  const getCart = () => {
+    if (typeof window !== "undefined") {
+      const storedCart = localStorage.getItem("cart");
+      return storedCart ? JSON.parse(storedCart) : [];
+    }
+    return [];
+  };
+
+  const [cartItems, setCartItems] = useState(getCart());
+
+  useEffect(() => {
+    const storedCart = getCart();
+    setCartItems(storedCart);
+  }, []);
+
+  const removeItem = (id) => {
+    const updatedCart = cartItems.filter(item => item.id !== id); // Only removes the product with this specific ID
+    setCartItems(updatedCart);
+    localStorage.setItem("cart", JSON.stringify(updatedCart));
+  };
+
   const total = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
   return (
@@ -87,7 +84,7 @@ const ShoppingCart = () => {
       <div className="bg-white shadow-lg rounded-lg divide-y divide-gray-200">
         {cartItems.length > 0 ? (
           cartItems.map((item) => (
-            <CartItem key={item.id} item={item} />
+            <CartItem key={item.id} item={item} removeItem={removeItem} />
           ))
         ) : (
           <p className="text-gray-500 text-center py-10">Your cart is empty.</p>
@@ -101,9 +98,12 @@ const ShoppingCart = () => {
         </a>
         <div className="text-right">
           <p className="text-xl font-semibold text-gray-900">Total: ${total.toFixed(2)}</p>
+         {/* Link to payment/checkout page */}
+        <Link href="/payment">
           <button className="mt-4 bg-blue-600 text-white py-2 px-6 rounded-md hover:bg-blue-700 transition">
             Proceed to Checkout
           </button>
+        </Link>
         </div>
       </div>
     </div>

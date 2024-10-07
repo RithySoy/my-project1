@@ -6,7 +6,7 @@ import { Bars3Icon, BellIcon, XMarkIcon, ShoppingCartIcon } from '@heroicons/rea
 import { auth, db } from '@/lib/firebase' // Adjust this import path as needed
 import { onAuthStateChanged } from 'firebase/auth'
 import { doc, getDoc } from 'firebase/firestore'
-import { signOut } from "firebase/auth";
+import { signOut } from 'firebase/auth'
 import Link from 'next/link'
 
 const navigation = [
@@ -46,7 +46,7 @@ export default function Navbar() {
     return () => unsubscribe() // Cleanup subscription on unmount
   }, [])
 
-  const filteredNavigation = navigation.filter(item => 
+  const filteredNavigation = navigation.filter(item =>
     userRole && item.roles.includes(userRole)
   )
 
@@ -57,7 +57,7 @@ export default function Navbar() {
           <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
             <div className="relative flex h-16 items-center justify-between">
               <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
-                {/* Mobile menu button*/}
+                {/* Mobile menu button */}
                 <Disclosure.Button className="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
                   <span className="absolute -inset-0.5" />
                   <span className="sr-only">Open main menu</span>
@@ -88,42 +88,44 @@ export default function Navbar() {
                       </Link>
                     ))}
                     <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-  {!user && (
-    <>
-      <Link
-        href="/signup"
-        className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
-      >
-        Sign up
-      </Link>
-      <Link
-        href="/login"
-        className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
-      >
-        Login
-      </Link>
-    </>
-  )}
-  {user && (
-    <button
-      className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
-      onClick={() => {
-       signOut(auth).then(() => {
-          console.log("Signed out");
-          // Update the user state to null
-          // For example:
-          // setUser(null);
-        }).catch((error) => {
-          console.error("Error signing out:", error);
-        });
-      }}    >
-      Sign out
-    </button>
-  )}
-</div>
+                      {!user && (
+                        <>
+                          <Link
+                            href="/signup"
+                            className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
+                          >
+                            Sign up
+                          </Link>
+                          <Link
+                            href="/login"
+                            className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
+                          >
+                            Login
+                          </Link>
+                        </>
+                      )}
+                      {user && (
+                        <button
+                          className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
+                          onClick={() => {
+                            signOut(auth).then(() => {
+                              console.log('Signed out')
+                              // Update the user state to null
+                              // For example:
+                              // setUser(null);
+                            }).catch((error) => {
+                              console.error('Error signing out:', error)
+                            })
+                          }}
+                        >
+                          Sign out
+                        </button>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
+
               <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
                 <button
                   type="button"
@@ -133,6 +135,18 @@ export default function Navbar() {
                   <span className="sr-only">View notifications</span>
                   <BellIcon className="h-6 w-6" aria-hidden="true" />
                 </button>
+
+                {/* Shopping cart icon */}
+                <Link href="/shoppingCart">
+                  <button
+                    type="button"
+                    className="relative ml-3 rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
+                  >
+                    <span className="absolute -inset-1.5" />
+                    <span className="sr-only">View cart</span>
+                    <ShoppingCartIcon className="h-6 w-6" aria-hidden="true" />
+                  </button>
+                </Link>
 
                 {/* Profile dropdown */}
                 <Menu as="div" className="relative ml-3">

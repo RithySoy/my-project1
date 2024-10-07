@@ -1,10 +1,11 @@
 "use client";
 
 import { uploadProductImage } from "@/utils/uploadProductImage";
-import React from "react";
-import { useState } from "react";
+import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function ProductUploader() {
+  const router = useRouter(); // Initialize the router
   const [file, setFile] = useState(null);
   const [productData, setProductData] = useState({
     name: "",
@@ -17,6 +18,7 @@ export default function ProductUploader() {
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
   };
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     const parsedVal = name === "price" || name === "stock" ? parseInt(value) : value;
@@ -30,7 +32,8 @@ export default function ProductUploader() {
     e.preventDefault();
     if (file) {
       await uploadProductImage(file, productData);
-      alert("Product Uploaded sucessfully!");
+      alert("Product Uploaded successfully!");
+      router.push("/products"); // Navigate to the products page
     }
   };
 
@@ -74,12 +77,22 @@ export default function ProductUploader() {
           placeholder="stock"
           onChange={handleInputChange}
         />
-        <button
-          type="submit"
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-        >
-          Upload Product
-        </button>
+        <div className="flex items-center">
+          <button
+            type="submit"
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          >
+            Upload Product
+          </button>
+          <button
+            type="button"
+            onClick={() => router.push("/products")} 
+            className="bg-black hover:bg-gray-800 text-white font-bold py-2 px-4 rounded ml-auto"
+          >
+            Back
+          </button>
+
+        </div>
       </form>
     </div>
   );
