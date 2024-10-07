@@ -13,6 +13,7 @@ export default function ProductUploader() {
     price: 0,
     description: "",
     stock: 0,
+    dateCreated: new Date().toISOString(),
   });
 
   const handleFileChange = (e) => {
@@ -97,3 +98,4 @@ export default function ProductUploader() {
     </div>
   );
 }
+
