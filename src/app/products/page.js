@@ -65,7 +65,7 @@ const ProductsPage = () => {
             <p className="text-gray-600">Category: {product.category}</p>
             <p className="text-gray-600">Price: ${product.price}</p>
             <p className="text-gray-600">Stock: {product.stock}</p>
-             <p className="text-gray-600">Stock: {product.dateCreated}</p>
+             <p className="text-gray-600">Date Created: {product.dateCreated}</p>
 
             {/* <Link href={`/products/edit/${product.id}`} className='mr-10'>
               <span className="text-blue-500 hover:underline">Edit</span>
