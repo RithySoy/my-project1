@@ -66,21 +66,17 @@ const ShoppingCart = () => {
     const storedCart = getCart();
     setCartItems(storedCart);
   }, []);
-
   const removeItem = (id) => {
     // Find the first occurrence of the item with the matching id and remove only that one
+    const index = cartItems.findIndex(item => item.id === id);
+    if (index === -1) return;
+
     const updatedCart = [...cartItems];
-    const index = updatedCart.findIndex(item => item.id === id);
-  
-    if (index !== -1) {
-      // Remove only one product with the matching id
-      updatedCart.splice(index, 1);
-    }
-  
+    updatedCart.splice(index, 1);
+
     setCartItems(updatedCart);
     localStorage.setItem("cart", JSON.stringify(updatedCart));
   };
-  
   
 
   const total = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
