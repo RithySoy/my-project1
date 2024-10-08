@@ -49,9 +49,18 @@ export default function ProductDetail() {
   }, [id]);
 
   const handleAddToCart = () => {
-    const updatedCart = [...cart, { ...product, quantity: 1 }];
-    setCart(updatedCart);
-    localStorage.setItem("cart", JSON.stringify(updatedCart));
+    const existingItem = cart.find((item) => item.id === product.id);
+    if (existingItem) {
+      const updatedCart = cart.map((item) =>
+        item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
+      );
+      setCart(updatedCart);
+      localStorage.setItem("cart", JSON.stringify(updatedCart));
+    } else {
+      const updatedCart = [...cart, { ...product, quantity: 1 }];
+      setCart(updatedCart);
+      localStorage.setItem("cart", JSON.stringify(updatedCart));
+    }
   };
 
   const handleBuyNow = () => {
@@ -137,3 +146,4 @@ export default function ProductDetail() {
     </div>
   );
 }
+

@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { Check, Clock } from 'lucide-react';
 import Link from 'next/link';
 
-const CartItem = ({ item, removeItem }) => (
+const CartItem = ({ item, removeItem, updateQuantity }) => (
   <div className="flex items-center py-6 border-b last:border-b-0">
     
     {/* Product Image */}
@@ -31,6 +31,7 @@ const CartItem = ({ item, removeItem }) => (
       <select
         className="border rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300"
         defaultValue={item.quantity}
+        onChange={(e) => updateQuantity(item.id, parseInt(e.target.value))}
       >
         {[1, 2, 3, 4, 5].map((num) => (
           <option key={num} value={num}>
@@ -38,7 +39,7 @@ const CartItem = ({ item, removeItem }) => (
           </option>
         ))}
       </select>
-      <p className="text-lg font-semibold text-gray-900">${item.price.toFixed(2)}</p>
+      <p className="text-lg font-semibold text-gray-900">${(item.price * item.quantity).toFixed(2)}</p>
     </div>
 
     {/* Remove Button */}
@@ -77,6 +78,17 @@ const ShoppingCart = () => {
     setCartItems(updatedCart);
     localStorage.setItem("cart", JSON.stringify(updatedCart));
   };
+  const updateQuantity = (id, quantity) => {
+    // Find the first occurrence of the item with the matching id and update its quantity
+    const index = cartItems.findIndex(item => item.id === id);
+    if (index === -1) return;
+
+    const updatedCart = [...cartItems];
+    updatedCart[index].quantity = quantity;
+
+    setCartItems(updatedCart);
+    localStorage.setItem("cart", JSON.stringify(updatedCart));
+  };
   
 
   const total = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
@@ -90,7 +102,7 @@ const ShoppingCart = () => {
       <div className="bg-white shadow-lg rounded-lg divide-y divide-gray-200">
         {cartItems.length > 0 ? (
           cartItems.map((item) => (
-            <CartItem key={item.id} item={item} removeItem={removeItem} />
+            <CartItem key={item.id} item={item} removeItem={removeItem} updateQuantity={updateQuantity} />
           ))
         ) : (
           <p className="text-gray-500 text-center py-10">Your cart is empty.</p>
@@ -117,3 +129,4 @@ const ShoppingCart = () => {
 };
 
 export default ShoppingCart;
+
