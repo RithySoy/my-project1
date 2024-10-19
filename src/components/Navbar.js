@@ -10,11 +10,11 @@ import { signOut } from 'firebase/auth'
 import Link from 'next/link'
 
 const navigation = [
-  { name: 'Home', href: '/home', current: false, roles: ['user', 'admin'] },
+  { name: 'Home', href: '/home', current: false, roles: ['user'] },
   { name: 'Products', href: '/products', current: false, roles: ['user', 'admin'] },
   { name: 'Create Product', href: '/uploadProduct', current: false, roles: ['admin'] },
   { name: 'Comparison', href: '/comparison', current: false, roles: ['user'] },
-  { name: 'Update Product', href: '/products/list', current: false, roles: ['admin'] },
+  { name: 'Manage Product', href: '/products/list', current: false, roles: ['admin'] },
 ]
 
 function classNames(...classes) {
@@ -71,6 +71,13 @@ export default function Navbar() {
               <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
                 <div className="flex flex-shrink-0 items-center">
                   {/* Add your logo here */}
+                  
+                  <img
+                  className="h-8 w-auto"
+                  src="/images/Logo.jpg" 
+                  alt="ReGood"
+                />
+                 
                 </div>
                 <div className="hidden sm:ml-6 sm:block">
                   <div className="flex space-x-4">
@@ -110,9 +117,6 @@ export default function Navbar() {
                           onClick={() => {
                             signOut(auth).then(() => {
                               console.log('Signed out')
-                              // Update the user state to null
-                              // For example:
-                              // setUser(null);
                             }).catch((error) => {
                               console.error('Error signing out:', error)
                             })

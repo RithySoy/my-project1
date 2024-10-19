@@ -3,13 +3,15 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
-import { db } from "@/lib/firebase";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { db, storage } from "@/lib/firebase";
 import { Loader2 } from "lucide-react";
 
 const ProductDetailPage = ({ params }) => {
-  const { id } = params; // Ensure the id is correctly destructured from params
+  const { id } = params;
   const [productData, setProductData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [file, setFile] = useState(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -29,25 +31,41 @@ const ProductDetailPage = ({ params }) => {
   }, [id]);
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    const parsedVal = name === "price" || name === "stock" ? parseInt(value) : value;
-    setProductData((prevData) => ({
-      ...prevData,
-      [name]: isNaN(parsedVal) ? value : parsedVal,
-    }));
+    const { name, value, type } = e.target;
+    if (type === "file") {
+      setFile(e.target.files[0]);
+    } else {
+      const parsedVal = name === "price" || name === "stock" ? parseInt(value) : value;
+      setProductData((prevData) => ({
+        ...prevData,
+        [name]: isNaN(parsedVal) ? value : parsedVal,
+      }));
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
     const productRef = doc(db, "products", id);
 
     try {
-      await updateDoc(productRef, productData);
+      let updatedData = { ...productData };
+
+      if (file) {
+        const storageRef = ref(storage, `products/${file.name}`);
+        await uploadBytes(storageRef, file);
+        const imageUrl = await getDownloadURL(storageRef);
+        updatedData.imageUrl = imageUrl;
+      }
+
+      await updateDoc(productRef, updatedData);
       console.log("Product updated successfully");
-      router.push("/products"); // Redirect to products page after update
+      router.push("/products");
     } catch (error) {
       console.error("Error updating product:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -87,6 +105,17 @@ const ProductDetailPage = ({ params }) => {
                 className="mt-2 block w-full p-4 text-lg border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
+            <div>
+              <label className="block text-lg font-medium text-gray-700">Description</label>
+              <textarea
+                name="description"
+                value={productData.description}
+                onChange={handleChange}
+                required
+                className="mt-2 block w-full p-4 text-lg border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                rows="4"
+              />
+            </div>
           </div>
 
           <div className="grid grid-cols-2 gap-6">
@@ -116,12 +145,24 @@ const ProductDetailPage = ({ params }) => {
             </div>
           </div>
 
+          <div>
+            <label className="block text-lg font-medium text-gray-700">Product Image</label>
+            <input
+              type="file"
+              name="imageUrl"
+              onChange={handleChange}
+              accept="image/*"
+              className="mt-2 block w-full p-4 text-lg border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            />
+          </div>
+
           <div className="flex justify-center">
             <button
               type="submit"
               className="bg-blue-600 hover:bg-blue-700 text-white py-4 px-8 rounded-lg text-xl font-semibold transition duration-300"
+              disabled={loading}
             >
-              Update Product
+              {loading ? 'Updating...' : 'Update Product'}
             </button>
           </div>
         </form>

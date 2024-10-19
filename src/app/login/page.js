@@ -33,7 +33,7 @@ const handleLogin = async (e) => {
       const userData = userDoc.data();
 
       if (userData.role === "admin") {
-        router.push("/admin-dashboard");
+        router.push("/products");
       } else if (userData.role === "user") {
         router.push("/home");
       } else {

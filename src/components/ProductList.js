@@ -3,39 +3,46 @@ import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { doc, deleteDoc, getDocs, collection } from "firebase/firestore";
 import { db } from '@/lib/firebase';
-
-
-
-
-// const products = querySnapshot.docs.map(doc => doc.data()); 
+import Navbar from './Navbar';
+import Footer from './footer';
 
 const ProductList = () => {
   const [products, setProducts] = useState([]);
   const router = useRouter();
-  useEffect(()=> {
-    const fetchProduct = async ()=>{
+
+  useEffect(() => {
+    const fetchProduct = async () => {
       const querySnapshot = await getDocs(collection(db, "products"));
       setProducts(querySnapshot.docs.map(doc => (
-        {id: doc.id,
-          ...doc.data()})));
+        { id: doc.id, ...doc.data() }
+      )));
     }
     fetchProduct();
-  },[])
+  }, []);
+
   const handleEdit = (id) => {
-    // Add logic to handle editing the product
     router.push(`/products/edit/${id}`);
-    
   };
 
-   const handleDelete = async(id) => {
-    // Add logic to handle deleting the product
-    
+  const handleDelete = async (id) => {
     await deleteDoc(doc(db, "products", id));
-    alert(`Delete product with id: ${id}`);
+    alert(`Deleted product with id: ${id}`);
   };
+
+  const handleCreate = () => {
+    router.push('/uploadProduct/'); // Redirect to product creation page
+  };
+
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Product List</h1>
+      <Navbar />
+      <h1 className="text-2xl font-bold mb-4">Manage your Products</h1>
+      <button
+        onClick={handleCreate}
+        className="bg-green-500 text-white py-2 px-4 rounded mb-4 hover:bg-green-600"
+      >
+        Create Product
+      </button>
       <ul className="space-y-4">
         {products.map((product) => (
           <li key={product.id} className="border p-4 rounded-lg shadow-sm flex items-center space-x-4">
@@ -65,6 +72,7 @@ const ProductList = () => {
           </li>
         ))}
       </ul>
+      <Footer />
     </div>
   );
 };

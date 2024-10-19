@@ -1,18 +1,24 @@
 'use client';
 
 import Navbar from '@/components/Navbar';
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, doc, getDocs, increment, updateDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Loader2 } from 'lucide-react';
-
+import Footer from '@/components/footer';
+import ProductCard from '@/components/ProductCard'
 const ProductsPage = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
-
-  useEffect(() => {
+const increaseView = async(id) => {
+const productRef = doc(db, "products", id);
+      await updateDoc(productRef, {
+            views: increment(1)
+          });   
+}
+useEffect(() => {
     const fetchProducts = async () => {
       const productsCollection = collection(db, 'products');
       const productsSnapshot = await getDocs(productsCollection);
@@ -37,6 +43,7 @@ const ProductsPage = () => {
 
   if (loading) {
     return (
+    
       <div className="flex h-screen justify-center items-center">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
       </div>
@@ -56,35 +63,14 @@ const ProductsPage = () => {
             placeholder="Search products..."
             value={searchTerm}
             onChange={handleSearch}
-            className="w-full max-w-lg p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            className="w-full max-w-xl p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
           />
         </div>
 
         {/* Product Grid Section */}
         <div className="grid grid-cols-1 gap-y-12 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
           {filteredProducts.map((product) => (
-            <div key={product.id} className="group relative bg-white shadow-lg rounded-lg overflow-hidden transform transition duration-500 hover:scale-105">
-              <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-t-lg bg-gray-200 lg:aspect-none lg:h-60">
-                <img
-                  src={product.imageUrl}
-                  alt={product.name}
-                  className="h-full w-full object-cover object-center lg:h-full lg:w-full"
-                />
-              </div>
-              <div className="px-4 py-4">
-                <h3 className="text-lg font-semibold text-gray-900">
-                  <Link href={`/products/${product.id}`}>
-                    <span aria-hidden="true" className="absolute inset-0" />
-                    {product.name}
-                  </Link>
-                </h3>
-                <p className="mt-1 text-sm text-gray-500">Category: {product.category}</p>
-                <p className="mt-1 text-sm text-gray-500">Stock: {product.stock}</p>
-                <p className="text-lg font-medium text-orange-500 mt-2">${product.price}</p>
-                <p className="text-lg font-medium text-orange-500 mt-2">Date created: {product.dateCreated}</p>
-
-              </div>
-            </div>
+        <ProductCard product={product}/>
           ))}
         </div>
 
@@ -93,6 +79,7 @@ const ProductsPage = () => {
           <p className="text-center mt-4 text-gray-600">No products found.</p>
         )}
       </div>
+      <Footer/>
     </div>
   );
 };

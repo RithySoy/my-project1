@@ -28,6 +28,7 @@ const SearchComponent = ({ onSearch }) => {
       <button type="submit" style={styles.button}>
         Search
       </button>
+      
     </form>
   );
 };

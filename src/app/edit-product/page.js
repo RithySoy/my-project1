@@ -1,10 +1,10 @@
-import UpdateProduct from '@/components/UpdateProduct';
 import React from 'react';
+import UpdateProductForm from '../../components/UpdateProduct';
 
 export default function page() { 
   return (
     <div>
-      <UpdateProduct/>
+      <UpdateProductForm/>
     </div>
   );
 }
