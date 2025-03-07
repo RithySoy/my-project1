@@ -12,8 +12,8 @@ import Link from 'next/link'
 const navigation = [
   { name: 'Home', href: '/home', current: false, roles: ['user'] },
   { name: 'Products', href: '/products', current: false, roles: ['user', 'admin'] },
-  { name: 'Create Product', href: '/uploadProduct', current: false, roles: ['admin'] },
-  { name: 'Comparison', href: '/comparison', current: false, roles: ['user'] },
+  //{ name: 'Create Product', href: '/uploadProduct', current: false, roles: ['admin'] },
+  // { name: 'Comparison', href: '/comparison', current: false, roles: ['user'] },
   { name: 'Manage Product', href: '/products/list', current: false, roles: ['admin'] },
 ]
 

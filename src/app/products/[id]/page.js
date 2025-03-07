@@ -21,7 +21,6 @@ export default function ProductDetail() {
   const [views, setViews] = useState(0);
   const [role, setRole] = useState("");
   const [showAlert, setShowAlert] = useState(false); // State to show/hide alert
-
   const getCart = () => {
     if (typeof window !== "undefined") {
       const storedCart = localStorage.getItem("cart");
@@ -107,7 +106,8 @@ export default function ProductDetail() {
           <Alert variant="success" className="mb-6">
             <AlertTitle>Added to Cart</AlertTitle>
             <AlertDescription>
-              You have successfully added <strong>{product.name}</strong> to your cart!
+              You have successfully added <strong>{product.name}</strong> to
+              your cart!
             </AlertDescription>
           </Alert>
         )}
@@ -122,7 +122,9 @@ export default function ProductDetail() {
             </div>
             <div className="md:w-1/2 p-6 space-y-4">
               <CardHeader>
-                <CardTitle className="text-4xl font-bold text-gray-800">{product.name}</CardTitle>
+                <CardTitle className="text-4xl font-bold text-gray-800">
+                  {product.name}
+                </CardTitle>
                 <Badge variant="secondary" className="mt-2 text-lg">
                   {product.category}
                 </Badge>
@@ -137,7 +139,9 @@ export default function ProductDetail() {
                   <div className="flex items-center text-lg">
                     <Package className="mr-2 h-5 w-5 text-gray-500" />
                     <span className="font-semibold">Stock:</span>
-                    <span className="ml-2 text-gray-900">{product.stock} units</span>
+                    <span className="ml-2 text-gray-900">
+                      {product.stock} units
+                    </span>
                   </div>
                   <div className="flex items-center text-lg">
                     <Eye className="mr-2 h-5 w-5 text-gray-500" />
@@ -154,20 +158,22 @@ export default function ProductDetail() {
                   <p className="text-base">{product.description}</p>
                 </div>
                 <div className="mt-8 flex space-x-4">
-                  {role === "user" ? (
-                    <>
+                  {!role ? (
+                    <Button className="w-full" onClick={()=> router.push("/login")}>Buy now</Button>
+                  ) : role === "user" ? (
+                    <div className="flex space-x-4 w-full">
                       <Button className="w-full" onClick={handleAddToCart}>
                         Add to Cart
                       </Button>
                       <Button
-                        className="w-full bg-gradient-to-r from-green-500 to-green-600 text-white font-semibold py-3 rounded-lg hover:from-green-600 hover:to-green-700 transition ease-in-out duration-300"
+                        className="w-full bg-green-500 hover:bg-green-600"
                         onClick={handleBuyNow}
                       >
                         Buy Now
                       </Button>
-                    </>
+                    </div>
                   ) : (
-                    <Button className="w-full bg-gray-500 text-white font-semibold py-3 rounded-lg cursor-not-allowed">
+                    <Button className="w-full" variant="secondary" disabled>
                       Admin View Only
                     </Button>
                   )}
